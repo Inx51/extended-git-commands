@@ -1,0 +1,39 @@
+#!/bin/sh
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -r|--repository) repository="$2"; shift ;;
+        -b|--branch) branch=$2; shift ;;
+        -sd|--sub-directory) subdirectory=$2; shift ;;
+        *) help; exit 1 ;;
+    esac
+    shift
+done
+
+if [ -z "$repository"]
+then
+    echo 'argument -r or --repository is required, input a source/url as value'
+    exit 1
+fi
+
+if [ -z "$branch"]
+then
+    branch=master
+fi
+
+if [ -z "$subdirectory"]
+then
+    echo 'argument -sd or --sub-directory is required, input the path for the directory to clone'
+    exit 1
+fi
+
+filename=$(basename $repository)
+repositoryName="${filename%.*}"
+
+mkdir $repositoryName
+cd $repositoryName
+git init
+git remote add -f origin $repository
+git config core.sparseCheckout true
+echo "$subdirectory" >> .git/info/sparse-checkout
+git pull origin $branch
