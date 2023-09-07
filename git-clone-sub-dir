@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# clone only a sub-directory of a repository.
+# usage
+# git clone-sub-dir -r|--repository {repo-source} -b|--branch {master}(optional) -sd|--sub-directory {subdirectory-to-clone}
+
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -r|--repository) repository="$2"; shift ;;
